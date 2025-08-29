@@ -6,7 +6,6 @@ import { useEffect, useRef, useState } from "react";
 import Button from "./Button";
 import { TiLocationArrow } from "react-icons/ti";
 
-
 gsap.registerPlugin(ScrollTrigger);
 
 const Hero = () => {
@@ -16,28 +15,27 @@ const Hero = () => {
     const [loading, setLoading] = useState(true);
     const [loadedVideos, setLoadedVideos] = useState(0);
 
-    const totalVideos = 4;
-    const nextVideoRef = useRef(null);
+    const totalVideos = 3;
+    const nextVideoRef = useRef<HTMLVideoElement | null>(null);
 
     const handleVideoLoad = () => {
         setLoadedVideos((prev) => prev + 1);
-    }
+    };
 
     const upcomingVideoIndex = (currentIndex % totalVideos) + 1;
 
     const handleMiniVideoPlayerClick = () => {
         setHasClicked(true);
-
         setCurrentIndex(upcomingVideoIndex);
     };
 
     const getVideoSrc = (index: number) => `videos/hero-${index}.mp4`;
 
     useEffect(() => {
-        if (loadedVideos === totalVideos - 1) {
+        if (loadedVideos === totalVideos) {
             setLoading(false);
         }
-    }, [loadedVideos]);
+    }, [loadedVideos, totalVideos]);
 
     useGSAP(() => {
         if (hasClicked) {
@@ -49,7 +47,12 @@ const Hero = () => {
                 height: "100%",
                 duration: 1,
                 ease: "power1.inOut",
-                onStart: () => nextVideoRef.current.play(),
+                onStart: () => {
+                    // CORRECTED: Added a null check before attempting to play()
+                    if (nextVideoRef.current) {
+                        nextVideoRef.current.play();
+                    }
+                },
             });
             gsap.from("#current-video", {
                 transformOrigin: "center center",
@@ -59,7 +62,6 @@ const Hero = () => {
             });
         }
     }, { dependencies: [currentIndex], revertOnUpdate: true });
-
 
     useGSAP(() => {
         gsap.set("#video-frame", {
@@ -97,7 +99,6 @@ const Hero = () => {
                     <div className="mask-clip-path absolute-center absolute z-50 size-64 cursor-pointer overflow-hidden rounded-lg">
                         <div onClick={handleMiniVideoPlayerClick} className="origin-center scale-50 opacity-0 transition-all duration-500 ease-in hover:scale-100 hover:opacity-100">
                             <video
-                                ref={nextVideoRef}
                                 src={getVideoSrc(upcomingVideoIndex)}
                                 loop
                                 muted
