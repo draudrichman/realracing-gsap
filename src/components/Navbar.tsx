@@ -6,7 +6,7 @@ import { TiLocationArrow } from "react-icons/ti";
 
 import Button from "./Button";
 
-const navItems = ["Nexus", "Vault", "Prologue", "About", "Contact"];
+const navItems = ["Garage", "Tracks", "Championships", "Leaderboard", "Store"];
 
 const NavBar: React.FC = () => {
     const [isAudioPlaying, setIsAudioPlaying] = useState<boolean>(false);
@@ -55,8 +55,8 @@ const NavBar: React.FC = () => {
     }, [currentScrollY, lastScrollY]);
 
     useEffect(() => {
-            if (navContainerRef.current) {
-                gsap.to(navContainerRef.current, {
+        if (navContainerRef.current) {
+            gsap.to(navContainerRef.current, {
                 y: isNavVisible ? 0 : -100,
                 opacity: isNavVisible ? 1 : 0,
                 duration: 0.2,
@@ -77,7 +77,7 @@ const NavBar: React.FC = () => {
 
                         <Button
                             id="product-button"
-                            title="Products"
+                            title="Download Game"
                             rightIcon={<TiLocationArrow />}
                             containerClass="bg-blue-50 md:flex hidden items-center justify-center gap-1"
                         />
